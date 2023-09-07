@@ -28,7 +28,7 @@ public class SecurityConfig {
                         authorizeRequests
                                 .antMatchers("/api/admin/**")
                                 .hasAuthority("ADMIN")
-                                .antMatchers("/api/auth/**").permitAll()
+                                .antMatchers("/api/auth/**", "/swagger-ui/**","/swagger-ui.html","/swagger-ui/").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManagement ->
