@@ -22,8 +22,7 @@ public class AuthService {
 
     public AuthResponse register(RegisterRequest request) {
         var user = User.builder()
-                .first_name(request.getFirst_name())
-                .last_name(request.getLast_name())
+                .login(request.getLogin())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
@@ -38,10 +37,10 @@ public class AuthService {
     public AuthResponse login(AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
+                        request.getLogin(),
                         request.getPassword()
                 ));
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var user = userRepository.findByLogin(request.getLogin()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return AuthResponse.builder()
                 .token(jwtToken)
