@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private String login;
     private String email;
     private String password;
-    private boolean isEnabled = false ;
+    private boolean isEnabled = true ;
 
     @Enumerated(EnumType.STRING)
     private Role role;
