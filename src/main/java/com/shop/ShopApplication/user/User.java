@@ -25,6 +25,7 @@ public class User implements UserDetails {
     private String login;
     private String email;
     private String password;
+    private boolean isEnabled = false ;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -54,8 +55,5 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+
 }
