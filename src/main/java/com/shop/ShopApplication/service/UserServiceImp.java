@@ -42,4 +42,21 @@ public class UserServiceImp implements UserService{
     public User updateUser(User user) {
         return userRepository.save(user);
     }
+
+    @Override
+    public int enableUser(String email) {
+        return userRepository.enableUser(email);
+    }
+
+    @Override
+    public boolean doesUserExistByEmail(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        return userOptional.isPresent();
+    }
+
+    @Override
+    public boolean doesUserExistByLogin(String login) {
+        Optional<User> userOptional = userRepository.findByLogin(login);
+        return userOptional.isPresent();
+    }
 }

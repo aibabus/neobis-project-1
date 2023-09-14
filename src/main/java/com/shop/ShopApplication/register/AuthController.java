@@ -23,5 +23,10 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    @GetMapping(path = "confirm")
+    public String confirm(@RequestParam("token") String token) {
+        return authService.confirmToken(token);
+    }
+
 
 }

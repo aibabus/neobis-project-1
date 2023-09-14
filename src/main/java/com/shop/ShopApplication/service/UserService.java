@@ -13,5 +13,8 @@ public interface UserService {
     User getSingleUser (int id);
     void deleteUser (int id);
     User updateUser (User user);
+    public int enableUser(String email);
+    public boolean doesUserExistByEmail(String email);
+    public boolean doesUserExistByLogin(String login);
 
 }
