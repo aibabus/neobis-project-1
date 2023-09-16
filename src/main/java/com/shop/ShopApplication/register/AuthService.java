@@ -58,7 +58,7 @@ public class AuthService {
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 tokenCon,
                 LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(15),
+                LocalDateTime.now().plusMinutes(5),
                 user);
         String link = "https://neobis-project.up.railway.app/api/auth/confirm?token=" + tokenCon;
         confirmationTokenService.saveConfirmationToken(confirmationToken);
