@@ -38,6 +38,7 @@ public class AuthService {
             throw new IllegalStateException("email not valid");
         }
 
+
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalStateException("Email is already taken");
         }
@@ -54,6 +55,7 @@ public class AuthService {
                     .enabled(false)
                     .build();
             userRepository.save(user);
+
         String tokenCon = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 tokenCon,
@@ -64,13 +66,12 @@ public class AuthService {
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         emailSender.send(request.getEmail(), buildEmail(request.getLogin(), link));
 
-        
+
+
             var jwtToken = jwtService.generateToken(user);
             return AuthResponse.builder()
                     .token(jwtToken)
                     .build();
-
-
 
     }
 
