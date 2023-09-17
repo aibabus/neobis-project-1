@@ -21,6 +21,7 @@ public class AuthController {
     @PostMapping("/log")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request ){
         return ResponseEntity.ok(authService.login(request));
+
     }
 
     @GetMapping(path = "confirm")

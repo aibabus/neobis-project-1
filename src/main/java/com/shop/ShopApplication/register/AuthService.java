@@ -67,10 +67,8 @@ public class AuthService {
         emailSender.send(request.getEmail(), buildEmail(request.getLogin(), link));
 
 
-
-            var jwtToken = jwtService.generateToken(user);
             return AuthResponse.builder()
-                    .token(jwtToken)
+                    .token(tokenCon)
                     .build();
 
     }
@@ -110,6 +108,7 @@ public class AuthService {
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
         return "Email confirmed,  now you can log in !";
+
     }
 
     private String buildEmail(String name, String link) {
