@@ -41,4 +41,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.resendConfirmation(request));
     }
 
+    @GetMapping("/enabled")
+    public int checkUserEnabled(@RequestParam String username) {
+        // Call a method in your AuthService to check if the user is enabled
+        boolean isEnabled = authService.isUserEnabled(username);
+
+        return isEnabled ? 1 : 0;
+    }
+
 }

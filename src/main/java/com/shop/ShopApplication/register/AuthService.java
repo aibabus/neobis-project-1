@@ -114,6 +114,7 @@ public class AuthService {
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
 
+
         return new ConfirmationResponse("Email confirmed, now you can log in!");
     }
 
@@ -136,7 +137,7 @@ public class AuthService {
                     LocalDateTime.now(),
                     LocalDateTime.now().plusMinutes(5),
                     user);
-            String link = "https://neobis-project.up.railway.app/api/auth/confirm?token=" + tokenCon;
+            String link = "https://neobis-project.up.railway.app/api/auth/confirm?conToken=" + tokenCon;
             confirmationTokenService.saveConfirmationToken(confirmationToken);
             emailSender.send(email, buildEmail(user.getLogin(), link));
 
@@ -146,6 +147,12 @@ public class AuthService {
         }
 
     }
+
+    public boolean isUserEnabled(String username) {
+        Optional<User> user = userRepository.findByLogin(username);
+        return user.map(User::isEnabled).orElse(false);
+    }
+
 
 
 
