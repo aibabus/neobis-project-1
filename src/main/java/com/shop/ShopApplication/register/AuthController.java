@@ -27,7 +27,7 @@ public class AuthController {
 
     }
 
-    @PostMapping(path = "confirm")
+    @GetMapping(path = "confirm")
     public ResponseEntity<ConfirmationResponse> confirm(@RequestParam("conToken") String conToken) {
         ConfirmationResponse response = authService.confirmToken(conToken);
         return ResponseEntity.ok(response);
