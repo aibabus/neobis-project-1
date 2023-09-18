@@ -25,8 +25,8 @@ public class AuthController {
     }
 
     @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token) {
-        return authService.confirmToken(token);
+    public String confirm(@RequestParam("conToken") String conToken) {
+        return authService.confirmToken(conToken);
     }
 
 }

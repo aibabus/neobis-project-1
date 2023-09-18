@@ -62,7 +62,7 @@ public class AuthService {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(5),
                 user);
-        String link = "https://neobis-project.up.railway.app/api/auth/confirm?token=" + tokenCon;
+        String link = "https://neobis-project.up.railway.app/api/auth/confirm?conToken=" + tokenCon;
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         emailSender.send(request.getEmail(), buildEmail(request.getLogin(), link));
 
@@ -87,16 +87,16 @@ public class AuthService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public String confirmToken(String conToken) {
         ConfirmationToken confirmationToken = confirmationTokenService
-                .getToken(token)
+                .getToken(conToken)
                 .orElseThrow(() ->
                         new IllegalStateException("token not found"));
 
 
-//        if (confirmationToken.getConfirmedAt() != null) {
-//            throw new IllegalStateException("email already confirmed");
-//        }
+        if (confirmationToken.getConfirmedAt() != null) {
+            throw new IllegalStateException("email already confirmed");
+        }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
@@ -104,7 +104,7 @@ public class AuthService {
             throw new IllegalStateException("token expired");
         }
 
-        confirmationTokenService.setConfirmedAt(token);
+        confirmationTokenService.setConfirmedAt(conToken);
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
         return "Email confirmed,  now you can log in !";
