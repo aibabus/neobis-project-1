@@ -1,5 +1,6 @@
 package com.shop.ShopApplication.register.token;
 
+import com.shop.ShopApplication.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,5 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
     int updateConfirmedAt(String token,
                           LocalDateTime confirmedAt);
 
+    ConfirmationToken findByUser(User user);
 }

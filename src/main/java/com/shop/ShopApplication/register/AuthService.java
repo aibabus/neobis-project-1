@@ -2,7 +2,9 @@ package com.shop.ShopApplication.register;
 
 import com.shop.ShopApplication.config.JwtService;
 import com.shop.ShopApplication.email.EmailSender;
+import com.shop.ShopApplication.register.token.ConfirmationResponse;
 import com.shop.ShopApplication.register.token.ConfirmationToken;
+import com.shop.ShopApplication.register.token.ConfirmationTokenRepository;
 import com.shop.ShopApplication.register.token.ConfirmationTokenService;
 import com.shop.ShopApplication.service.UserService;
 import com.shop.ShopApplication.user.Role;
@@ -29,6 +31,7 @@ public class AuthService {
     private final UserService userService;
     private final EmailValidator emailValidator;
     private final EmailSender emailSender;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public AuthResponse register(RegisterRequest request) {
         boolean isValidEmail = emailValidator.
@@ -87,7 +90,7 @@ public class AuthService {
     }
 
     @Transactional
-    public String confirmToken(String conToken) {
+    public ConfirmationResponse confirmToken(String conToken) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(conToken)
                 .orElseThrow(() ->
@@ -107,7 +110,32 @@ public class AuthService {
         confirmationTokenService.setConfirmedAt(conToken);
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
-        return "Email confirmed,  now you can log in !";
+
+        return new ConfirmationResponse("Email confirmed, now you can log in!");
+    }
+
+    public void resendConfirmationEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        ConfirmationToken existingToken = confirmationTokenRepository.findByUser(user);
+
+        if (existingToken != null) {
+
+            existingToken.setConfirmedAt(LocalDateTime.now());
+            confirmationTokenRepository.save(existingToken);
+        } else {
+            String tokenCon = UUID.randomUUID().toString();
+            ConfirmationToken newToken = new ConfirmationToken(
+                    tokenCon,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(5),
+                    user);
+            confirmationTokenRepository.save(newToken);
+            String link = "https://neobis-project.up.railway.app/api/auth/confirm?conToken=" + newToken;
+            emailSender.send(user.getEmail(), buildEmail(user.getLogin(), link));
+        }
+
     }
 
 
