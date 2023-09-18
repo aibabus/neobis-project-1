@@ -93,7 +93,7 @@ public class AuthService {
     }
 
     @Transactional
-    public ConfirmationResponse confirmToken(String conToken) {
+    public String confirmToken(String conToken) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(conToken)
                 .orElseThrow(() ->
@@ -114,8 +114,7 @@ public class AuthService {
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
 
-
-        return new ConfirmationResponse("Email confirmed, now you can log in!");
+        return "Email confirmed, now you can log in!";
     }
 
     public ResendResponse resendConfirmation(ResendRequest request) {

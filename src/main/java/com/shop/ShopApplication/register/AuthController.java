@@ -28,8 +28,8 @@ public class AuthController {
     }
 
     @GetMapping(path = "confirm")
-    public ResponseEntity<ConfirmationResponse> confirm(@RequestParam("conToken") String conToken) {
-        ConfirmationResponse response = authService.confirmToken(conToken);
+    public ResponseEntity<String> confirm(@RequestParam("conToken") String conToken) {
+        String response = authService.confirmToken(conToken);
         return ResponseEntity.ok(response);
     }
 //    public String confirm(@RequestParam("conToken") String conToken) {
