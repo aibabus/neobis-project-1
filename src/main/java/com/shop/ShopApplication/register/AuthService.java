@@ -32,23 +32,24 @@ public class AuthService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public AuthResponse register(RegisterRequest request) {
-        boolean isValidEmail = emailValidator.
-                test(request.getEmail());
+        try {
+            boolean isValidEmail = emailValidator.
+                    test(request.getEmail());
 
-        if (!isValidEmail) {
-            throw new IllegalStateException("email not valid");
-        }
+            if (!isValidEmail) {
+                throw new IllegalStateException("email not valid");
+            }
 
 
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalStateException("Email is already taken");
-        }
+            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+                throw new IllegalStateException("Email is already taken");
+            }
 
-        if (userRepository.findByLogin(request.getLogin()).isPresent()) {
-            throw new IllegalStateException("Login is already taken");
-        }
+            if (userRepository.findByLogin(request.getLogin()).isPresent()) {
+                throw new IllegalStateException("Login is already taken");
+            }
 
-        var user = User.builder()
+            var user = User.builder()
                     .login(request.getLogin())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
@@ -57,21 +58,25 @@ public class AuthService {
                     .build();
             userRepository.save(user);
 
-        String tokenCon = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-                tokenCon,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(5),
-                user);
-        String link = "https://neobis-project.up.railway.app/api/auth/confirm?conToken=" + tokenCon;
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-        emailSender.send(request.getEmail(), buildEmail(request.getLogin(), link));
+            String tokenCon = UUID.randomUUID().toString();
+            ConfirmationToken confirmationToken = new ConfirmationToken(
+                    tokenCon,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(5),
+                    user);
+            String link = "https://neobis-project.up.railway.app/api/auth/confirm?conToken=" + tokenCon;
+            confirmationTokenService.saveConfirmationToken(confirmationToken);
+            emailSender.send(request.getEmail(), buildEmail(request.getLogin(), link));
 
 
             return AuthResponse.builder()
                     .token(tokenCon)
                     .build();
-
+        }catch(Exception ex){
+            return AuthResponse.builder()
+                    .message(ex.getMessage())
+                    .build();
+        }
     }
 
     public AuthResponse login(AuthRequest request) {
