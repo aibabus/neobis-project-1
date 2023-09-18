@@ -1,6 +1,8 @@
 package com.shop.ShopApplication.register;
 
 import com.shop.ShopApplication.register.token.ConfirmationResponse;
+import com.shop.ShopApplication.register.token.ResendRequest;
+import com.shop.ShopApplication.register.token.ResendResponse;
 import com.shop.ShopApplication.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +36,9 @@ public class AuthController {
 //        return authService.confirmToken(conToken);
 //    }
 
-    @PostMapping("/resend-email")
-    public ResponseEntity<String> resendEmail(@RequestParam("email") String email) {
-        authService.resendConfirmationEmail(email);
-        return ResponseEntity.ok("Email has been resent.");
+    @PostMapping("/resend-confirmation")
+    public ResponseEntity<ResendResponse> resendConfirmation(@RequestBody ResendRequest request){
+        return ResponseEntity.ok(authService.resendConfirmation(request));
     }
 
 }
