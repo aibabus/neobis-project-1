@@ -94,9 +94,9 @@ public class AuthService {
                         new IllegalStateException("token not found"));
 
 
-        if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
-        }
+//        if (confirmationToken.getConfirmedAt() != null) {
+//            throw new IllegalStateException("email already confirmed");
+//        }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
@@ -108,8 +108,11 @@ public class AuthService {
         userService.enableUser(
                 confirmationToken.getUser().getEmail());
         return "Email confirmed,  now you can log in !";
-
     }
+
+
+
+
 
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
